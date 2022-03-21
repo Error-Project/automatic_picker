@@ -1,0 +1,29 @@
+name: Rebase
+
+on:
+  schedule: [cron: '0 0 * * *']
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Automatic rebase
+    runs-on: macos-latest
+    steps:
+
+    - name: Clone EvolutionX repo
+      run: |
+        git config user.name "sahaymihir"
+        git config user.email "mihir.sahay0123@hotmail.com"
+        git clone https://github.com/Evolution-X/frameworks_base -b snow base
+        cd base
+
+    - name: pick
+      run: |
+        git fetch https://gitlab.com/Mihirsahay/frameworks_base_evo snow
+        git cherry-pick 0f38a469552e399438666a61f38364b3b9adae26^..065f80c204eec1078ee57aaef2f13fc637938ae8
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        force: true
+        github_token: ${{ secrets.GHTOKEN }}
