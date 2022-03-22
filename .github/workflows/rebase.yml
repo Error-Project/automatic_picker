@@ -7,18 +7,22 @@ on:
 jobs:
   build:
     name: Automatic rebase
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 5
 
-    - name: Clone EvolutionX repo
+    - name: Fetch EvolutionX repo
       run: |
-        git config user.name "sahaymihir"
-        git config user.email "mihir.sahay0123@hotmail.com"
-        git clone https://github.com/Evolution-X/frameworks_base -b snow base
-        cd base
-
-    - name: pick
+        git config user.name "Mihir Sahay"
+        git config user.email "mihr.sahay0123@hotmail.com"
+        git fetch https://github.com/Evolution-X/frameworks_base snow
+    - name: Rebase
       run: |
+        git reset HEAD-4
+        git rebase FETCH_HEAD
         git fetch https://gitlab.com/Mihirsahay/frameworks_base_evo snow
         git cherry-pick 0f38a469552e399438666a61f38364b3b9adae26^..065f80c204eec1078ee57aaef2f13fc637938ae8
 
