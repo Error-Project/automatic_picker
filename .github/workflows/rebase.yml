@@ -1,7 +1,6 @@
-name: Rebase
+name: Patcher
 
 on:
-  schedule: [cron: '0 0 * * *']
   workflow_dispatch:
 
 jobs:
@@ -11,23 +10,25 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
-      with:
-        fetch-depth: 5
 
     - name: Fetch EvolutionX repo
       run: |
+        git clone https://github.com/Evolution-X/frameworks_base -b snow base
+        git clone https://github.com/Error-Project/patches patches
+        
+    - name: Apply Patch
+      run: |
+        cd base 
         git config user.name "Mihir Sahay"
         git config user.email "mihr.sahay0123@hotmail.com"
-        git fetch https://github.com/Evolution-X/frameworks_base snow
-    - name: Rebase
-      run: |
-        git reset HEAD-4
-        git rebase FETCH_HEAD
-        git fetch https://gitlab.com/Mihirsahay/frameworks_base_evo snow
-        git cherry-pick 0f38a469552e399438666a61f38364b3b9adae26^..065f80c204eec1078ee57aaef2f13fc637938ae8
-
+        git apply ../patches/brightness.patch
+        git apply ../patches/rgb.patch
+        git apply ../patches/rgb_flicker.patch
+        
+    
     - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        force: true
+      run: |
+        git remote add repo https://github.com/Error-Project/frameworks_base 
+        git checkout -b snow-patched
+        git push -f
         github_token: ${{ secrets.GHTOKEN }}
