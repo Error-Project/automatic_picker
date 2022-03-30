@@ -22,8 +22,6 @@ jobs:
         git config user.name "Mihir Sahay"
         git config user.email "mihr.sahay0123@hotmail.com"
         git apply ../patches/brightness.patch
-        git apply ../patches/rgb.patch
-        git apply ../patches/rgb_flicker.patch
         
     
     - name: Push changes
